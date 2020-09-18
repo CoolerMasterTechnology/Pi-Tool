@@ -104,7 +104,7 @@ Out of the box this allows to wake up a Raspberry Pi from its halt state. Pi Too
 
 ## History of Cooler Master
 
-Cooler Master Co., Ltd. is a computer hardware manufacturer based in Taiwan. Founded in 1992, the company produces computer cases, power supplies, air and liquid CPU coolers, laptop cooling pads,peripherals and more.<br />
+Cooler Master Co., Ltd. is a computer hardware manufacturer based in Taiwan. Founded in 1992, the company produces computer cases, power supplies, air and liquid CPU coolers, laptop cooling pads, peripherals and more.<br />
 <br />
 Our components represent so many different personalities because our community does not fit into just one mold. It doesn’t matter if you’re a student on a tight budget, a graphic designer that’s brand new to building, or a veteran modder of high-end gaming PCs; we offer components to inspire creative freedom in everyone. **We believe that personal preference and individual expression leads to innovation.**<br />
 <br />
