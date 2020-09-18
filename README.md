@@ -44,9 +44,9 @@ Users can further modify these settings by entering the following code in the te
 *For this operation, a 3A 5V power supply is highly recommended.*
 <br />
 <br />
-Overclocking may cause system's instabilities, most show up immediately with a failure to boot. If this occurs, hold down the shift key during the next boot. This will temporarily disable all overclocking, allowing you to boot successfully and then edit your settings.
+Overclocking may cause system's instabilities, most show up immediately with a failure to boot. If this occurs, hold down the shift key during the next boot. This will temporarily disable all overclocking, allowing you to boot successfully and then edit your settings.<br />
 <br />
-The utility offers multiple overclocking presets to the users:
+**The utility offers multiple overclocking presets to the users:**
 <br />
 - **Base Clock**
   - Restores `config.txt` to the stock values
