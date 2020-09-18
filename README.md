@@ -10,34 +10,22 @@ TODO
 
 # Features
 
-### Overclocking
-The overclocking functions included in Pi Tool modify the following values in `/boot/config.txt: over_voltage, arm_freq, gpu_freq`.
-Users can further modify these settings by entering the following code in the terminal window: `sudo nano /boot/config.txt`.
-<br />
-<br />
-*For this operation, a 3A 5V power supply is highly recommended.*
-<br />
-<br />
-Overclocking may cause system's instabilities, most show up immediately with a failure to boot. If this occurs, hold down the shift key during the next boot. This will temporarily disable all overclocking, allowing you to boot successfully and then edit your settings.<br />
-<br />
-**The utility offers multiple overclocking presets to the users:**
-- **Base Clock**
-  - Restores `config.txt` to the stock values
+## Overclocking
 
-- **10%**
-  - `arm_freq=1650`
-  - `gpu_freq=550`
-  - `over_voltage=2`
+The overclocking feature included in Pi Tool modifies the following values in `/boot/config.txt`: `over_voltage, arm_freq, gpu_freq`. Users can further modify the overclocking, by editing the values themselves. (`sudo nano /boot/config.txt`)
 
-- **20%**
-  - `arm_freq=1800`
-  - `gpu_freq=600`
-  - `over_voltage=4`
+> :warning: *For this operation, a 3A 5V power supply is highly recommended.*
 
-- **30%**
-  - `arm_freq=1950`
-  - `gpu_freq=650`
-  - `over_voltage=5`
+Overclocking may cause system instabilities, most show up immediately with a failure to boot. If this occurs, hold down the shift key during the next boot. This will temporarily disable all overclocking, allowing you to boot successfully and then edit your settings.
+
+**Included overclocking presets**:
+
+| Overclocking preset | Values |
+|------------|----------|
+| **Base** | Restores stock values |
+| **10%** | <ul><li><code>arm_freq=1650</code></li><li><code>gpu_freq=550</code></li><li><code>over_voltage=2</code></li></ul> |
+| **20%** | <ul><li><code>arm_freq=1800</code></li><li><code>gpu_freq=600</code></li><li><code>over_voltage=4</code></li></ul> |
+| **20%** | <ul><li><code>arm_freq=1950</code></li><li><code>gpu_freq=650</code></li><li><code>over_voltage=5</code></li></ul> |
 
 ## System Monitoring
 
@@ -59,7 +47,7 @@ The Pi Case 40 includes a button that shortens pin 5 and 6 when pressed (`GPIO3`
 - **Run Custom Script**
 - **Open in Browser**
 
-<br />
+# Pi Case 40
 
 <p align="center">
   <img src="https://i.imgur.com/9uufTjP.jpg" alt="Sublime's custom image"/>
