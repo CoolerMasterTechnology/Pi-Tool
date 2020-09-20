@@ -50,7 +50,7 @@ Pi Case 40 includes a button that shortens pin 5 and 6 when pressed (GPIO3 and G
 # Pi Case 40
 
 <p align="center">
-  <img src="https://i.imgur.com/9uufTjP.jpg" alt="Sublime's custom image"/>
+  <img src="https://ksr-ugc.imgix.net/assets/029/816/736/669da923362c4a113ce24401f08e11e6_original.png?ixlib=rb-2.1.0&crop=faces&w=1024&h=576&fit=crop&v=1594745435&auto=format&frame=1&q=92&s=b9f5d6055d6a3c2f8c1ea377f06bf08c" alt="Sublime's custom image"/>
 </p>
 <br />
 <br />
