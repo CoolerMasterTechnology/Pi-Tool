@@ -6,7 +6,11 @@ The utility allows users access to a basic set of overclocking profiles, tested 
 
 # Getting Started
 
-TODO
+The Pi Tool can be installed on Raspberry Pi OS on a Raspberry Pi 4. Installing it is very simply: Just open a terminal, paste the following line into it and hit return. The installer will then guide you through the installation. 
+
+```sh
+curl https://raw.githubusercontent.com/CoolerMasterTechnology/pi-tool/master/install.sh | sh
+```
 
 # Features
 
@@ -53,7 +57,7 @@ If you have any feature ideas, want to extend the tool with a button action or m
 
 The daemon that collects metrics and listens for button presses is located under `daemon/`. Metrics or button actions can be added there in a straightforward way, but make sure to also adjust the Redux reducer in the frontend and add e.g. types and formatters for axis labels in the React application. 
 
-For development, just run the daemon with `cargo run` and spin up a development server for the frontend with `yarn run start`. If you happen to use NixOS, there's also a `shell.nix` file that contains all the development dependencies.
+For development, just run the daemon with `cargo run` and spin up a development server for the frontend with `yarn run start`. If you happen to use NixOS, there's also a `shell.nix` file which contains all the development dependencies. To build a package for testing, you can use `yarn run build` and `yarn run dist`.
 
 # Pi Case 40
 
