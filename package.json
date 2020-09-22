@@ -1,0 +1,94 @@
+{
+  "name": "pi-tool",
+  "version": "0.1.0",
+  "author": "Cooler Master <costa_m@coolermaster.eu>",
+  "description": "Overclocking, monitoring, button remapping tool for the Pi 4",
+  "private": true,
+  "dependencies": {
+    "@material-ui/core": "^4.11.0",
+    "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "^4.0.0-alpha.56",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.5.0",
+    "@testing-library/user-event": "^7.2.1",
+    "@types/chart.js": "^2.9.24",
+    "@types/jest": "^24.9.1",
+    "@types/node": "^12.12.53",
+    "@types/ramda": "^0.27.15",
+    "@types/react": "^16.9.44",
+    "@types/react-beautiful-dnd": "^13.0.0",
+    "@types/react-dom": "^16.9.8",
+    "@types/react-redux": "^7.1.9",
+    "@types/uuid": "^8.3.0",
+    "chart.js": "^2.9.3",
+    "chartjs-plugin-streaming": "^1.8.0",
+    "ramda": "^0.27.1",
+    "react": "^16.13.1",
+    "react-beautiful-dnd": "^13.0.0",
+    "react-chartjs-2": "^2.10.0",
+    "react-dnd": "^11.1.3",
+    "react-dnd-html5-backend": "^11.1.3",
+    "react-dom": "^16.13.1",
+    "react-redux": "^7.2.1",
+    "react-scripts": "3.4.1",
+    "redux": "^4.0.5",
+    "redux-persist": "^6.0.0",
+    "redux-thunk": "^2.3.0",
+    "rxjs": "^6.6.2",
+    "typescript": "^3.7.5",
+    "uuid": "^8.3.0"
+  },
+  "scripts": {
+    "build-daemon": "cd daemon && cargo build --release --features raspberry",
+    "start": "react-scripts start",
+    "build": "yarn run build-daemon && react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "electron": "electron .",
+    "postinstall": "electron-builder install-app-deps",
+    "preelectron-pack": "yarn build",
+    "pack": "electron-builder --dir --armv7l --linux",
+    "dist": "electron-builder"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "electron": "^9.2.1",
+    "electron-builder": "^22.8.0"
+  },
+  "main": "public/electron.js",
+  "homepage": "./",
+  "build": {
+    "appId": "com.coolermaster.pitool",
+    "productName": "Cooler Master Pi Tool",
+    "copyright": "Cooler Master",
+    "files": [
+      "build/**/*",
+      "node_modules/**/*"
+    ],
+    "extraFiles": [
+      "public/cm_logo_outline.png",
+      {
+        "from": "daemon/target/release",
+        "to": "bin",
+        "filter": [
+          "pi-tool-daemon"
+        ]
+      }
+    ],
+    "deb": {"fpm": ["--architecture=armhf"]}
+  }
+}
