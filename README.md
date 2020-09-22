@@ -53,6 +53,8 @@ If you have any feature ideas, want to extend the tool with a button action or m
 
 The daemon that collects metrics and listens for button presses is located under `daemon/`. Metrics or button actions can be added there in a straightforward way, but make sure to also adjust the Redux reducer in the frontend and add e.g. types and formatters for axis labels in the React application. 
 
+For development, just run the daemon with `cargo run` and spin up a development server for the frontend with `yarn run start`. If you happen to use NixOS, there's also a `shell.nix` file that contains all the development dependencies.
+
 # Pi Case 40
 
 ![Pi Case 40](https://ksr-ugc.imgix.net/assets/029/816/736/669da923362c4a113ce24401f08e11e6_original.png?ixlib=rb-2.1.0&crop=faces&w=1024&h=576&fit=crop&v=1594745435&auto=format&frame=1&q=92&s=b9f5d6055d6a3c2f8c1ea377f06bf08c)
