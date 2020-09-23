@@ -78,7 +78,7 @@ async fn main() -> Result<(), IoError> {
 	]
     ).unwrap();
 
-    info!("Starting Cooler Master Pi Tool Watcher...");
+    info!("Starting Cooler Master Pi Tool Daemon...");
 
     // Sets up state and inbound channel
     let state = PeerMap::new(Mutex::new(HashMap::new()));
@@ -90,7 +90,9 @@ async fn main() -> Result<(), IoError> {
     // Creates event loop and TCP listener
     let addr = "127.0.0.1:9002";
     let try_socket = TcpListener::bind(&addr).await;
-    let mut listener = try_socket.expect("Failed to bind");
+    let mut listener = try_socket.expect("Failed to start daemon!");
+
+
     debug!("Listening on: {}", addr);
 
     // Spawns handler for each connection
