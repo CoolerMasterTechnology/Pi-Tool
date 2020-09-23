@@ -47,8 +47,8 @@
     "electron": "electron .",
     "postinstall": "electron-builder install-app-deps",
     "preelectron-pack": "yarn build",
-    "pack": "electron-builder --dir --armv7l --linux",
-    "dist": "electron-builder"
+    "pack": "electron-builder --dir",
+    "dist": "USE_SYSTEM_FPM=\"true\" electron-builder --dir --armv7l --linux deb"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -75,6 +75,7 @@
     "appId": "com.coolermaster.pitool",
     "productName": "Cooler Master Pi Tool",
     "copyright": "Cooler Master",
+    "icon": "public/cm_logo_outline.png",
     "files": [
       "build/**/*",
       "node_modules/**/*"

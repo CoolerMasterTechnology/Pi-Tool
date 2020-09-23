@@ -1,23 +1,47 @@
 const {app, Menu, BrowserWindow, Tray} = require('electron');
 const path = require('path');
 const spawn = require('child_process').spawn;
+const exec = require('child_process').exec;
 
-let daemonPath = path.join(
+let tray = null;
+let mainWindow = null;
+let electronReady = false;
+let daemonReady = false;
+let execHandle = null;
+
+let daemonPath = path.resolve(path.join(
     app.getAppPath(),
     "../../bin/",
     "pi-tool-daemon"
-);
+));
 
 let trayIconPath = path.join(
     app.getAppPath(),
     "../../public/cm_logo_outline.png"
 );
 
-let execHandle = spawn(daemonPath);
-execHandle.stdout.pipe(process.stdout);
+checkRunning((isRunning) => {
+	if (isRunning) {
+		daemonReady = true;
+	} else {
+		execHandle = spawn("pkexec", [daemonPath], {detached: true});
+		execHandle.stdout.on('data', (data) => {
+			const output = data.toString();
 
-let tray = null;
-let mainWindow = null;
+			console.log(output);
+			if (output.includes("Cooler Master Pi Tool Watcher")) {
+				daemonReady = true;
+			}
+		});
+	}
+});
+
+function checkRunning(callback) {
+	exec('ps -A', (err, stdout, stderr) => {
+		callback(stdout.toString().indexOf('pi-tool-daemon') > -1);
+	});
+}
+
 
 function createWindow () {
     let mainWindow = new BrowserWindow({
@@ -54,7 +78,7 @@ function createWindow () {
     return mainWindow;
 }
 
-app.on('ready', () => {
+function launchApplication() {
     mainWindow = createWindow();
     
     const contextMenu = Menu.buildFromTemplate([
@@ -64,7 +88,7 @@ app.on('ready', () => {
 	{ label: 'Separator', type: 'separator' },
 	{ label: 'Quit', click: () => {
 	    app.isQuitting = true;
-	    execHandle.kill();
+	    //execHandle.kill();
 	    app.quit();
 	}}
     ]);
@@ -75,4 +99,17 @@ app.on('ready', () => {
     tray.on('click', () => {
 	mainWindow.show();
     });
+}
+
+function checkStart() {
+   if (electronReady && daemonReady) {
+	   launchApplication();
+   } else {
+	   setTimeout(checkStart, 100);
+   }
+}
+
+app.on('ready', () => {
+    electronReady = true;
+    checkStart();
 });
