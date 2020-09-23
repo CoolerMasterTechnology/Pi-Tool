@@ -6,9 +6,9 @@ The utility allows users access to a basic set of overclocking profiles, tested 
 
 # Warning! This is a DEVELOPER ALPHA version.
 
-**Pi Tool is still undergoing finalization, the current version is a "DEVELOPERS ONLY" Alpha version meant for further development and feedback collection. The installer script not included.**
+*Pi Tool is still undergoing finalization, the current version is a "DEVELOPERS ONLY" Alpha version meant for further development and feedback collection. The installer script not included.*
 
-**DO NOT RUN THIS DEVELOPER ALPHA VERSION unless you are using a safe test enviroment, preferably a fresh disposable Raspberry Pi OS copy.**
+*DO NOT RUN THIS DEVELOPER ALPHA VERSION unless you are using a safe test enviroment, preferably a fresh disposable Raspberry Pi OS copy.*
 
 
 # Getting Started
