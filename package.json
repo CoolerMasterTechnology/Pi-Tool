@@ -90,6 +90,18 @@
         ]
       }
     ],
-    "deb": {"fpm": ["--architecture=armhf"]}
+    "deb": {
+      "fpm": ["--architecture=armhf"],
+      "depends": [
+        "gconf2",
+	"gconf-service",
+	"libnotify4",
+	"libappindicator1",
+	"libxtst6",
+	"libnss3",
+	"lxterminal",
+	"libraspberrypi-bin"
+      ]
+    }
   }
 }

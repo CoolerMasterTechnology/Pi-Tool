@@ -33,7 +33,7 @@ pub fn launch_script(path: &str) -> Result<(), String> {
     info!("Launching script {}", &path);
 
     if cfg!(feature="raspberry") {
-	if let Err(_e) = Command::new(path).spawn() {
+	if let Err(_e) = Command::new("lxterminal").args(&["-e", path]).spawn() {
 	    warn!("Failed to launch script");
 	} 
     }
