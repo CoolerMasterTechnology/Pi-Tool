@@ -232,79 +232,80 @@ const ButtonActionList: React.FC<ButtonActionListProps> = ({ selectAction, butto
         );
     }
 
-    // Checks if button action is currently selected
-    const isSelected = (action: ButtonAction | undefined, identifier: ButtonActionIdentifier) => {
-        if (action !== undefined) {
-            return action.identifier === identifier
-        } else {
-            return false
+// Checks if button action is currently selected
+const isSelected = (action: ButtonAction | undefined, identifier: ButtonActionIdentifier) => {
+    if (action !== undefined) {
+        return action.identifier === identifier
+    } else {
+        return false
+    }
+}
+
+const handleActionParamInput = (event: any) => {
+    if (buttonAction !== undefined) {
+        if (isSelected(buttonAction, ButtonActionIdentifier.Script)) {
+            buttonAction.scriptPath = event.target.value;
+        } else if (isSelected(buttonAction, ButtonActionIdentifier.Browser)) {
+            buttonAction.url = event.target.value;
         }
     }
+};
 
-    const handleActionParamInput = (event: any) => {
-        if (buttonAction !== undefined) {
-            if (isSelected(buttonAction, ButtonActionIdentifier.Script)) {
-                buttonAction.scriptPath = event.target.value;
-            } else if (isSelected(buttonAction, ButtonActionIdentifier.Browser)) {
-                buttonAction.url = event.target.value;
-            }
-        }
-    };
-
-    return (
-        <List component="nav">
-            <ListItem
-                button
-                selected={isSelected(buttonAction, ButtonActionIdentifier.SystemShutdown)}
-                onClick={(_e) => handleActionSelect(ButtonActionIdentifier.SystemShutdown)}>
-                <ListItemIcon>
-                    <PowerSettingsNewIcon />
-                </ListItemIcon>
-                <ListItemText primary="Shut down system" />
-            </ListItem>
-            <ListItem
-                button
-                selected={isSelected(buttonAction, ButtonActionIdentifier.SystemReboot)}
-                onClick={(_e) => handleActionSelect(ButtonActionIdentifier.SystemReboot)}>
-                <ListItemIcon>
-                    <ReplayIcon />
-                </ListItemIcon>
-                <ListItemText primary="Restart system" />
-            </ListItem>
-            <ListItem button
-                selected={isSelected(buttonAction, ButtonActionIdentifier.Script)}
-                onClick={(_e) => handleActionSelect(ButtonActionIdentifier.Script)}>
-                <ListItemIcon>
-                    <PlayCircleOutlineIcon />
-                </ListItemIcon>
-                <ListItemText primary="Run custom script" />
-            </ListItem>
-            <Collapse in={isSelected(buttonAction, ButtonActionIdentifier.Script)} timeout="auto" unmountOnExit>
-                <Box p={2} width={1}>
-                    <TextField
-                        value={(buttonAction !== undefined) ? buttonAction.scriptPath : null}
-                        onChange={handleActionParamInput}
-                        className={classes.textField} id="standard-basic" label="Script path" />
-                </Box>
-            </Collapse>
-            <ListItem button
-                selected={isSelected(buttonAction, ButtonActionIdentifier.Browser)}
-                onClick={(_e) => handleActionSelect(ButtonActionIdentifier.Browser)}>
-                <ListItemIcon>
-                    <OpenInBrowserIcon />
-                </ListItemIcon>
-                <ListItemText primary="Open in browser" />
-            </ListItem>
-            <Collapse in={isSelected(buttonAction, ButtonActionIdentifier.Browser)} timeout="auto" unmountOnExit>
-                <Box p={2} width={1}>
-                    <TextField
-                        value={(buttonAction !== undefined) ? buttonAction.url : null}
-                        onChange={handleActionParamInput}
-                        className={classes.textField} id="standard-basic" label="URL" />
-                </Box>
-            </Collapse>
-        </List>
-    );
+return (
+    <List component="nav">
+        <ListItem
+            button
+            selected={isSelected(buttonAction, ButtonActionIdentifier.SystemShutdown)}
+            onClick={(_e) => handleActionSelect(ButtonActionIdentifier.SystemShutdown)}>
+            <ListItemIcon>
+                <PowerSettingsNewIcon />
+            </ListItemIcon>
+            <ListItemText primary="Shut down system" />
+        </ListItem>
+        <ListItem
+            button
+            selected={isSelected(buttonAction, ButtonActionIdentifier.SystemReboot)}
+            onClick={(_e) => handleActionSelect(ButtonActionIdentifier.SystemReboot)}>
+            <ListItemIcon>
+                <ReplayIcon />
+            </ListItemIcon>
+            <ListItemText primary="Restart system" />
+        </ListItem>
+        <ListItem button
+            selected={isSelected(buttonAction, ButtonActionIdentifier.Script)}
+            onClick={(_e) => handleActionSelect(ButtonActionIdentifier.Script)}>
+            <ListItemIcon>
+                <PlayCircleOutlineIcon />
+            </ListItemIcon>
+            <ListItemText primary="Run custom script" />
+        </ListItem>
+        <Collapse in={isSelected(buttonAction, ButtonActionIdentifier.Script)} timeout="auto" unmountOnExit>
+            <Box p={2} width={1}>
+                <TextField
+                    value={(buttonAction !== undefined) ? buttonAction.scriptPath : null}
+                    onChange={handleActionParamInput}
+                    className={classes.textField} id="standard-basic" label="Script path" />
+            </Box>
+        </Collapse>
+        <ListItem button
+            selected={isSelected(buttonAction, ButtonActionIdentifier.Browser)}
+            onClick={(_e) => handleActionSelect(ButtonActionIdentifier.Browser)}>
+            <ListItemIcon>
+                <OpenInBrowserIcon />
+            </ListItemIcon>
+            <ListItemText primary="Open in browser" />
+        </ListItem>
+        <Collapse in={isSelected(buttonAction, ButtonActionIdentifier.Browser)} timeout="auto" unmountOnExit>
+            <Box p={2} width={1}>
+                <TextField
+                    value={(buttonAction !== undefined) ? buttonAction.url : null}
+                    onChange={handleActionParamInput}
+                    placeholder="https://google.com"
+                    className={classes.textField} id="standard-basic" label="URL" />
+            </Box>
+        </Collapse>
+    </List>
+);
 };
 
 const AddButtonMappingDialog: React.FC<AddButtonMappingDialogProps> = ({ onClose, open }) => {

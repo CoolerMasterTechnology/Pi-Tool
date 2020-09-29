@@ -174,7 +174,7 @@ const ButtonMappingCard: React.FC = () => {
         return () => {
             buttonActionSubscriber.unsubscribe();
         };
-    }, []);
+    }, [buttonMappings]);
 
     const handleAddMappingClose = () => {
         setAddMappingOpen(false);
