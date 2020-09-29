@@ -112,6 +112,7 @@ echo "\e[34m === Pi Tool installation ===\e[0m"
 echo " Installing..."
 
 deb_file_path="/tmp/pi-tool*.deb"
+sudo apt-get install libxss-dev
 sudo apt-get install $deb_file_path
 
 echo " "
