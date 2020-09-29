@@ -12,6 +12,7 @@ The Pi Tool can be installed on Raspberry Pi OS on a Raspberry Pi 4. Installing 
 
 ```sh
 curl https://raw.githubusercontent.com/CoolerMasterTechnology/pi-tool/master/install.sh -o pi-tool-install.sh
+chmod +x pi-tool-install.sh
 ./pi-tool-install.sh
 ```
 
