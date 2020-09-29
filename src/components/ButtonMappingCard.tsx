@@ -173,23 +173,18 @@ const ButtonMappingCard: React.FC = () => {
         return () => {
             buttonActionSubscriber.unsubscribe();
         };
-
-
     }, []);
 
     const handleAddMappingClose = () => {
         setAddMappingOpen(false);
-        /* syncMappings(); */
     };
 
     const handleMappingDelete = (id: string) => {
         dispatch(removeButtonMapping(id));
-        /* syncMappings(); */
     };
 
     const handleMappingToggle = (id: string, event: any) => {
         dispatch(toggleButtonMapping(id, event.target.checked));
-        /* syncMappings(); */
     }
 
     const cardActions = (

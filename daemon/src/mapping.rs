@@ -114,15 +114,13 @@ fn trigger_action(mappings: &MappingDirectory,
 		ButtonAction::Reboot => {
 		    actions::reboot().unwrap()
 		},
-		ButtonAction::LaunchScript { path } => {
+		ButtonAction::LaunchScript { path: _ } => {
 		    let event = Event::ButtonAction { id: mapping.id.clone() };
 		    crate::command_handler::broadcast(peers, event);
-		    //actions::launch_script(path).unwrap()
 		},
-		ButtonAction::OpenBrowser { url } => {
+		ButtonAction::OpenBrowser { url: _ } => {
 		    let event = Event::ButtonAction { id: mapping.id.clone() };
 		    crate::command_handler::broadcast(peers, event);
-		    //actions::open_browser(url).unwrap()
 		}
 	    }
 	},
