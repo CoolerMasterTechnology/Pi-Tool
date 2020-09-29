@@ -8,10 +8,11 @@ The utility allows users access to a basic set of overclocking profiles, tested 
 
 > Currently, Pi Tool is in a public beta. Therefore we recommend using a fresh Raspberry Pi OS installation as a testing environment.
 
-The Pi Tool can be installed on Raspberry Pi OS on a Raspberry Pi 4. Installing it is very simply: Just open a terminal, paste the following line into it and hit return. The installer will then guide you through the installation. 
+The Pi Tool can be installed on Raspberry Pi OS on a Raspberry Pi 4. Installing it is very simply: Just open a terminal, paste the following lines into it and hit return. The installer will then guide you through the installation. 
 
 ```sh
-curl https://raw.githubusercontent.com/CoolerMasterTechnology/pi-tool/master/install.sh | sh
+curl https://raw.githubusercontent.com/CoolerMasterTechnology/pi-tool/master/install.sh -o pi-tool-install.sh
+./pi-tool-install.sh
 ```
 
 # Features
