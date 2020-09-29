@@ -1,46 +1,16 @@
-const {app, Menu, BrowserWindow, Tray} = require('electron');
+const {app, Menu, BrowserWindow, Tray, ipcMain, shell } = require('electron');
 const path = require('path');
 const spawn = require('child_process').spawn;
 const exec = require('child_process').exec;
 
+
 let tray = null;
 let mainWindow = null;
-let electronReady = false;
-let daemonReady = false;
-let execHandle = null;
-
-let daemonPath = path.resolve(path.join(
-    app.getAppPath(),
-    "../../bin/",
-    "pi-tool-daemon"
-));
 
 let trayIconPath = path.join(
     app.getAppPath(),
     "../../public/cm_logo_outline.png"
 );
-
-checkRunning((isRunning) => {
-	if (isRunning) {
-		daemonReady = true;
-	} else {
-		execHandle = spawn("pkexec", [daemonPath], {detached: true});
-		execHandle.stdout.on('data', (data) => {
-			const output = data.toString();
-
-			console.log(output);
-			if (output.includes("Cooler Master Pi Tool Watcher")) {
-				daemonReady = true;
-			}
-		});
-	}
-});
-
-function checkRunning(callback) {
-	exec('ps -A', (err, stdout, stderr) => {
-		callback(stdout.toString().indexOf('pi-tool-daemon') > -1);
-	});
-}
 
 
 function createWindow () {
@@ -51,11 +21,18 @@ function createWindow () {
 	minWidth: 600,
 	minHeight: 800,
 	show: true,
-	resizable: false
+	resizable: false,
+	webPreferences: {
+	    nodeIntegration: true
+	}
     })
 
     mainWindow.setMenu(null);
     mainWindow.loadFile('build/index.html');
+
+    if (process.env.PI_TOOL_DEBUG) {
+	mainWindow.webContents.openDevTools();
+    }
 
     mainWindow.on('close', (event) => {
 	if (!app.isQuitting) {
@@ -88,7 +65,6 @@ function launchApplication() {
 	{ label: 'Separator', type: 'separator' },
 	{ label: 'Quit', click: () => {
 	    app.isQuitting = true;
-	    //execHandle.kill();
 	    app.quit();
 	}}
     ]);
@@ -101,15 +77,18 @@ function launchApplication() {
     });
 }
 
-function checkStart() {
-   if (electronReady && daemonReady) {
-	   launchApplication();
-   } else {
-	   setTimeout(checkStart, 100);
-   }
-}
-
 app.on('ready', () => {
-    electronReady = true;
-    checkStart();
+    launchApplication();
 });
+
+/// IPC actions
+
+ipcMain.on('open-browser', (event, url) => {
+    console.log("Opening browser");
+    shell.openExternal(url);
+})
+
+ipcMain.on('launch-script', (event, path) => {
+    console.log("Launching script");
+    spawn("lxterminal", ["-e", path], {detached: true});
+})

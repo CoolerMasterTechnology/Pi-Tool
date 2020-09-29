@@ -351,7 +351,6 @@ const AddButtonMappingDialog: React.FC<AddButtonMappingDialogProps> = ({ onClose
     const existingMappings = (presses: ButtonPress[]) => {
         let existing = false;
 
-        console.log(presses);
         for (let mapping of Object.values(buttonMappings)) {
             if (presses.every((p, i) => p === mapping.buttonPresses[i]) && presses.length === mapping.buttonPresses.length) {
                 existing = true;

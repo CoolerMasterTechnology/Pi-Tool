@@ -52,7 +52,7 @@ pub fn overclock(params: OverclockParameters) {
     let mut config_file = OpenOptions::new()
 	.read(true)
 	.write(true)
-	.open("config.txt").unwrap();
+	.open("/boot/config.txt").unwrap();
     let config_reader = BufReader::new(&config_file);
     let config_lines = config_reader
 	.lines()

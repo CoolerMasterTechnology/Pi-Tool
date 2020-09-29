@@ -109,7 +109,8 @@ export interface CommandMessage {
 
 
 export enum EventType {
-    Measurement = 'Measurement'
+    Measurement = 'Measurement',
+    ButtonAction = 'ButtonAction'
 }
 
 export interface Measurement {

@@ -32,11 +32,11 @@ pub fn reboot() -> Result<(), String> {
 pub fn launch_script(path: &str) -> Result<(), String> {
     info!("Launching script {}", &path);
 
-    if cfg!(feature="raspberry") {
-	if let Err(_e) = Command::new("lxterminal").args(&["-e", path]).spawn() {
-	    warn!("Failed to launch script");
-	} 
-    }
+    // if cfg!(feature="raspberry") {
+    // 	if let Err(_e) = Command::new("lxterminal").args(&["-e", path]).spawn() {
+    // 	    warn!("Failed to launch script");
+    // 	} 
+    // }
 
     Ok(())
 }
@@ -45,11 +45,11 @@ pub fn launch_script(path: &str) -> Result<(), String> {
 pub fn open_browser(url: &str) -> Result<(), String> {
     info!("Opening URL {} in browser", &url);
 
-    if cfg!(feature="raspberry") {
-	if let Err(_e) = Command::new("chromium-browser").args(&[url]).spawn() {
-	    warn!("Failed to open URL in browser");
-	} 
-    }
+    // if cfg!(feature="raspberry") {
+    // 	if let Err(_e) = Command::new("chromium-browser").args(&[url]).spawn() {
+    // 	    warn!("Failed to open URL in browser");
+    // 	} 
+    // }
 
     Ok(())
 }

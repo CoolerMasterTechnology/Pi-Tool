@@ -13,8 +13,9 @@ import MainCard from './MainCard';
 import ArrowRightAltIcon from '@material-ui/icons/ArrowRightAlt';
 
 import { RootState } from '../reducers';
-import { daemon } from '../websocket';
+import { daemon, buttonActionObservable$ } from '../websocket';
 import { Command } from '../models';
+import { launchScript, openBrowser } from '../util/actions';
 
 import {
     List,
@@ -110,7 +111,7 @@ const formatButtonAction = (action: ButtonAction) => {
         case ButtonActionIdentifier.SystemReboot:
             return "Reboot";
         case ButtonActionIdentifier.Script:
-            const scriptFileName = action.scriptPath.replace(/^.*[\\\/]/, '');
+            const scriptFileName = action.scriptPath?.replace(/^.*[\\\/]/, '');
             return `Launch ${scriptFileName}`;
         case ButtonActionIdentifier.Browser:
             let hostname = '';
@@ -139,9 +140,42 @@ const ButtonMappingCard: React.FC = () => {
         });
     }
 
+    // Sync button mappings on every change
     useEffect(() => {
         syncMappings();
     }, [buttonMappings]);
+
+    // Sets up button action subscriber
+    useEffect(() => {
+        let buttonActionSubscriber = buttonActionObservable$.subscribe((event: any) => {
+            const { id } = event;
+
+            if (buttonMappings[id]) {
+                switch (buttonMappings[id].buttonAction.identifier) {
+                    case ButtonActionIdentifier.Script:
+                        const scriptPath = buttonMappings[id].buttonAction.scriptPath;
+                        if (scriptPath) {
+                            launchScript(scriptPath);
+                        }
+                        break;
+                    case ButtonActionIdentifier.Browser:
+                        const url = buttonMappings[id].buttonAction.url;
+                        if (url !== undefined) {
+                            openBrowser(url);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+
+        return () => {
+            buttonActionSubscriber.unsubscribe();
+        };
+
+
+    }, []);
 
     const handleAddMappingClose = () => {
         setAddMappingOpen(false);

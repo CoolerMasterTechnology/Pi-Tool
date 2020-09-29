@@ -1,4 +1,5 @@
 import { webSocket } from "rxjs/webSocket";
+import { filter } from 'rxjs/operators';
 import { Command, MonitoringMetric, EventType } from './models';
 
 // TODO: Add reconnect logic
@@ -16,10 +17,11 @@ export const buildObservable$ = (metric: MonitoringMetric) => {
         () => ({ command: Command.SubscribeMetric, metric: metric }),
         () => ({ command: Command.UnsubscribeMetric, metric: metric }),
         (message: any) => {
-            let isMeasurement = (message.event === EventType.Measurement);
-            let isOfMetric = (message.measurement.metric === metric);
-
-            return isMeasurement && isOfMetric;
+            if (message.event === EventType.Measurement) {
+                return (message['measurement']['metric'] === metric);
+            } else {
+                return false;
+            }
         }
     );
 };
@@ -34,3 +36,6 @@ const observedMetrics = [
 export const metricObservables = Object.assign({}, ...observedMetrics.map((m) => (
     { [m]: buildObservable$(m) }
 )));
+
+export const buttonActionObservable$ = daemon.asObservable().pipe(filter((message: any) => (message.event === EventType.ButtonAction)));
+

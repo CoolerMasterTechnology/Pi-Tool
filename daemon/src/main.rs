@@ -92,7 +92,6 @@ async fn main() -> Result<(), IoError> {
     let try_socket = TcpListener::bind(&addr).await;
     let mut listener = try_socket.expect("Failed to start daemon!");
 
-
     debug!("Listening on: {}", addr);
 
     // Spawns handler for each connection

@@ -22,6 +22,7 @@
     "@types/uuid": "^8.3.0",
     "chart.js": "^2.9.3",
     "chartjs-plugin-streaming": "^1.8.0",
+    "is-electron": "^2.2.0",
     "ramda": "^0.27.1",
     "react": "^16.13.1",
     "react-beautiful-dnd": "^13.0.0",
@@ -47,7 +48,7 @@
     "electron": "electron .",
     "postinstall": "electron-builder install-app-deps",
     "preelectron-pack": "yarn build",
-    "pack": "electron-builder --dir",
+    "pack": "electron-builder --dir --armv7l",
     "dist": "USE_SYSTEM_FPM=\"true\" electron-builder --dir --armv7l --linux deb"
   },
   "eslintConfig": {
@@ -90,17 +91,23 @@
         ]
       }
     ],
+    "linux": {
+      "icon": "public/cm_logo_outline.png"
+    },
     "deb": {
-      "fpm": ["--architecture=armhf"],
+      "fpm": [
+        "--architecture=armhf",
+        "--deb-systemd=pi-tool-daemon.service"
+      ],
       "depends": [
         "gconf2",
-	"gconf-service",
-	"libnotify4",
-	"libappindicator1",
-	"libxtst6",
-	"libnss3",
-	"lxterminal",
-	"libraspberrypi-bin"
+        "gconf-service",
+        "libnotify4",
+        "libappindicator1",
+        "libxtst6",
+        "libnss3",
+        "lxterminal",
+        "libraspberrypi-bin"
       ]
     }
   }

@@ -7,6 +7,7 @@ use std::time::Duration;
 use sysfs_gpio::{Direction, Pin};
 use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
+use crate::command_handler::Event;
 use crate::actions;
 
 const BUTTON_PIN_NUM: u64 = 3;
@@ -24,7 +25,7 @@ pub enum ButtonAction {
 }
 
 
-#[derive(Debug, Hash, Eq, PartialEq, Deserialize, Serialize)]
+#[derive(Clone, Debug, Hash, Eq, PartialEq, Deserialize, Serialize)]
 pub enum ButtonPress {
     Short,
     Long
@@ -42,6 +43,8 @@ impl ButtonPress {
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Mapping {
+    /// Mapping ID
+    pub id: String,
     /// Vector that defines button sequence
     pub button_presses: Vec<ButtonPress>,
     /// Action triggered by button sequence
@@ -50,7 +53,7 @@ pub struct Mapping {
     pub active: bool,
 }
 
-type MappingDirectory = Arc<Mutex<HashMap<Vec<ButtonPress>, ButtonAction>>>;
+type MappingDirectory = Arc<Mutex<HashMap<Vec<ButtonPress>, Mapping>>>;
 
 pub struct ButtonListener {
     mappings: MappingDirectory,
@@ -65,12 +68,12 @@ impl ButtonListener {
     }
 
     /// Starts the button listener
-    pub fn start(&mut self) {
+    pub fn start(&mut self, peer_map: crate::PeerMap) {
 	let mappings_local = self.mappings.clone();
 	
 	thread::spawn(move || {
 	    if cfg!(feature="raspberry") {
-		let _res = poll(mappings_local);
+		let _res = poll(mappings_local, peer_map);
 	    }
 	});
     }
@@ -87,25 +90,24 @@ impl ButtonListener {
 	for map in mappings {
 	    if map.active {
 		mappings_dir.insert(
-		    map.button_presses,
-		    map.button_action
+		    map.button_presses.clone(),
+		    map
 		);
 	    }
 	}
-
-    dbg!(mappings_dir);
     }
 }
 
 /// Looks up button sequence and triggers corresponding action
-fn trigger_action(mappings: &MappingDirectory, press_vec: &Vec<ButtonPress>) {
+fn trigger_action(mappings: &MappingDirectory,
+		  press_vec: &Vec<ButtonPress>,
+		  peers: &crate::PeerMap) {
     let mapping_dir = mappings.lock().unwrap();
-
     match mapping_dir.get(press_vec) {
-	Some(action) => {
+	Some(mapping) => {
 	    debug!("Triggering action");
 
-	    match action {
+	    match &mapping.button_action {
 		ButtonAction::Shutdown => {
 		    actions::shutdown().unwrap()
 		},
@@ -113,10 +115,14 @@ fn trigger_action(mappings: &MappingDirectory, press_vec: &Vec<ButtonPress>) {
 		    actions::reboot().unwrap()
 		},
 		ButtonAction::LaunchScript { path } => {
-		    actions::launch_script(path).unwrap()
+		    let event = Event::ButtonAction { id: mapping.id.clone() };
+		    crate::command_handler::broadcast(peers, event);
+		    //actions::launch_script(path).unwrap()
 		},
 		ButtonAction::OpenBrowser { url } => {
-		    actions::open_browser(url).unwrap()
+		    let event = Event::ButtonAction { id: mapping.id.clone() };
+		    crate::command_handler::broadcast(peers, event);
+		    //actions::open_browser(url).unwrap()
 		}
 	    }
 	},
@@ -146,7 +152,7 @@ fn push_button_press(press_vec: &mut Vec<ButtonPress>, press_duration: u128) {
 }
 
 /// Polls GPIO for new button sequences
-fn poll(mappings: MappingDirectory) -> sysfs_gpio::Result<()> {
+fn poll(mappings: MappingDirectory, peer_map: crate::PeerMap) -> sysfs_gpio::Result<()> {
     let input = Pin::new(BUTTON_PIN_NUM);
     let mut last_debounce: u128 = 0;
     let mut pressed_time: u128 = 0;
@@ -192,7 +198,7 @@ fn poll(mappings: MappingDirectory) -> sysfs_gpio::Result<()> {
             // Resets button press sequence timer
             if (get_timestamp() - last_press_time) > SEQUENCE_DELAY &&
 		!button_press_vec.is_empty() {
-                trigger_action(&mappings, &button_press_vec);
+                trigger_action(&mappings, &button_press_vec, &peer_map);
                 button_press_vec.clear();
             }
 

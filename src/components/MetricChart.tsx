@@ -96,7 +96,6 @@ const MetricChart: React.FC<MetricChartProps> = ({ metric }) => {
             // append the new data to the existing chart data
             if (chartRef) {
                 if (chartRef !== undefined && chartRef.current) {
-                    console.log(`append new event for ${metric}: ${event}`);
                     chartRef.current.chartInstance.data.datasets[0].data.push({
                         x: new Date(measurement.timestamp * 1000),
                         y: measurement.value

@@ -36,7 +36,7 @@ pub fn start_handler(peer_map: crate::PeerMap, ws_rx: Receiver<Command>) {
 
         // Starts button press listener
 	let mut btn_listener = ButtonListener::new();
-	btn_listener.start();
+	btn_listener.start(peer_map.clone());
 
         for cmd in ws_rx {
             match cmd {
@@ -53,7 +53,7 @@ pub fn start_handler(peer_map: crate::PeerMap, ws_rx: Receiver<Command>) {
                     collector.unsubscribe(m);
                 },
                 Command::SyncMappings { mappings: m_repr } => {
-		    let mappings = m_repr.values().map(|m| m.to_mapping()).collect();
+		    let mappings = m_repr.iter().map(|(id, m)| m.to_mapping(id)).collect();
 		    btn_listener.sync(mappings);
                 }
             }
