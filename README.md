@@ -6,7 +6,8 @@ The utility allows users access to a basic set of overclocking profiles, tested 
 
 # Getting Started
 
-> Currently, Pi Tool is in a public beta. Therefore we recommend using a fresh Raspberry Pi OS installation as a testing environment.
+> DISCLAIMER: Currently, Pi Tool is in a public BETA. Therefore we recommend using a fresh Raspberry Pi OS installation as a testing environment. 
+
 
 The Pi Tool can be installed on Raspberry Pi OS on a Raspberry Pi 4. Installing it is very simply: Just open a terminal, paste the following lines into it and hit return. The installer will then guide you through the installation. 
 
@@ -54,6 +55,12 @@ Pi Case 40 includes a button that shortens pin 5 and 6 when pressed (GPIO3 and G
 - **System Restart**
 - **Run Custom Script**
 - **Open in Browser**
+
+# Theming
+
+The Pi Tool installer ships with a custom wallpaper and a modified version of Adapta Colorpack with Cooler Master's brand colors. (Joshaby's theming package, more info [HERE](https://github.com/Joshaby/Adapta-Colorpack))
+
+All theming features are optional, Pi Tool allows users to select whether they want to enable or not the customization of the desktop environment during the initial steps of the installation of Pi Tool.
 
 # Contributing
 
