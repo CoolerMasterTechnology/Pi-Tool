@@ -1,6 +1,6 @@
 #!/bin/sh
 
-echo -e "\e[38;5;91m"
+echo "\e[38;5;91m"
 echo """
                           XXXXXXXXXXXMXXXXX
                     XXXXXXXX             XXXXXXXX
@@ -26,8 +26,7 @@ echo """
                     XXXXITXX             XYOXXXUX
                           XXXXXXXXXRXXXSXXX
 """
-echo -e "\u001b[37;1m Cooler Master Pi Tool Installer\e[0m"
-echo " version 0.1.2"
+echo "\e[37;1m Cooler Master Pi Tool Installer\e[0m"
 echo ""
 sleep 0.5
 echo " This tool is designed to be used together with Cooler Master's Pi Case 40,"
@@ -37,27 +36,64 @@ echo ""
 echo ""
 sleep 1
 
+apply_gtk_theme()
+{
+	git clone https://github.com/Joshaby/Adapta-Colorpack
+	cd Adapta-Colorpack/Pkg/usr/share/themes/Adapta-Purple-Nokto-Eta/
+
+	find . -type f -name "*.css" -exec sed -i 's/rgba\(156, 39, 176, 0.8\)/rgba\(132, 50, 155, 0.9\)/g' {} +
+	find . -type f -name "*.css" -exec sed -i 's/#263238/#53565A/g' {} +
+	find . -type f -name "*.css" -exec sed -i 's/#9C27B0/#84329B/g' {} +
+
+	cd ..
+	mkdir -p /home/$USER/.themes
+	cp -r Adapta-Purple-Nokto-Eta /home/$USER/.themes/Adapta-CoolerMaster
+
+	GTK_CONFIG="/home/$USER/.gtkrc-2.0"
+
+	if [ -f "$GTK_CONFIG" ]; then
+		if [ ! -z $(grep "gtk-theme-name" "$GTK_CONFIG") ]; then 
+			sed -i 's/^gtk-theme-name=.*/gtk-theme-name="Adapta-CoolerMaster"/g' "$GTK_CONFIG"
+		else
+			echo 'gtk-theme-name="Adapta-CoolerMaster"' >> "$GTK_CONFIG"
+		fi
+	else
+		echo 'gtk-theme-name="Adapta-CoolerMaster"' > "$GTK_CONFIG"
+	fi
+
+	while true; do
+		read -p " Do you want to apply these changes now? [Y/n]: " yn
+		case $yn in
+			[Yy]* ) lxpanelctl restart && openbox --restart; break;;
+			[Nn]* ) break;;
+			* ) echo " Please answer yes or no.";;
+		esac
+	done
+}
+
 customize_desktop()
 {
 	echo ""
 	echo ""
-	echo -e "\e[34m === Desktop customization === \e[0m"
+	echo "\e[34m === Desktop customization === \e[0m"
+	echo " Installing theme installation dependencies..."
+	sudo apt install git
 	echo " Changing wallpaper..."
-	cp /tmp/pi-tool/theme/cm_wallpaper.jpg ~/.cm_wallpaper.jpg
+	cp /tmp/theme/cm_wallpaper.jpg ~/.cm_wallpaper.jpg
 	pcmanfm --set-wallpaper ~/.cm_wallpaper.jpg
 	echo " Changing GTK theme..."
-	sleep 0.5
+	apply_gtk_theme
 	echo ""
-	echo -e "\e[32m Done!\e[0m"
+	echo "\e[32m Done!\e[0m"
 }
-
-
 
 # Download everything
 echo " Downloading data..."
-curl https://github.com/CoolerMasterTechnology/pi-tool/releases/latest/download/pi-tool.tar.gz -o /tmp/pi-tool.tar.gz &>/dev/null
+curl -L https://github.com/CoolerMasterTechnology/pi-tool/releases/latest/download/pi-tool.tar.gz -o /tmp/pi-tool.tar.gz
 cd /tmp
-tar -xvf pi-tool.tar.gz &>/dev/null
+tar -xf pi-tool.tar.gz
+
+echo ""
 echo " Download finished!"
 
 while true; do
@@ -72,16 +108,19 @@ done
 echo ""
 sleep 1
 
-echo -e "\e[34m === Pi Tool installation ===\e[0m"
+echo "\e[34m === Pi Tool installation ===\e[0m"
 echo " Installing..."
-sudo dpkg -i /tmp/pi-tool/*.deb
-sudo apt-get install -f
+
+deb_file_path="/tmp/pi-tool*.deb"
+sudo apt-get install $deb_file_path
+
 echo " "
-echo -e "\e[32m Done!\e[0m"
+echo "\e[32m Done!\e[0m"
 
 echo ""
 echo ""
 sleep 1
 
-echo " You can now start the Pi Tool from your 'Applications' menu. Have fun!"
+echo " You can now start the Pi Tool from your start menu. Have fun!"
 echo ""
+

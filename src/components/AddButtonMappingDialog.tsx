@@ -33,6 +33,7 @@ import OpenInBrowserIcon from '@material-ui/icons/OpenInBrowser';
 import { ButtonPress, ButtonAction, ButtonActionIdentifier } from '../models/index';
 import ButtonPressIcon from './ButtonPressIcon';
 import { addButtonMapping } from '../actions/index';
+import { flushStore } from '../util/actions';
 
 const useStyles = makeStyles({
     list: {
@@ -392,6 +393,7 @@ const AddButtonMappingDialog: React.FC<AddButtonMappingDialogProps> = ({ onClose
 
         // Adds button mapping
         dispatch(addButtonMapping(mapping));
+        flushStore();
 
         // Clears presses and actions
         setButtonPresses([]);

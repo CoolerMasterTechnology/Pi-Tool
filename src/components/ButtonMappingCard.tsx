@@ -15,7 +15,7 @@ import ArrowRightAltIcon from '@material-ui/icons/ArrowRightAlt';
 import { RootState } from '../reducers';
 import { daemon, buttonActionObservable$ } from '../websocket';
 import { Command } from '../models';
-import { launchScript, openBrowser } from '../util/actions';
+import { launchScript, openBrowser, flushStore } from '../util/actions';
 
 import {
     List,
@@ -138,6 +138,7 @@ const ButtonMappingCard: React.FC = () => {
             command: Command.SyncMappings,
             mappings: buttonMappings
         });
+        flushStore();
     }
 
     // Sync button mappings on every change

@@ -32,6 +32,7 @@ import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 
 import { levelToString, formatLevelValues } from '../util/overclock';
+import { flushStore } from '../util/actions';
 
 const useStyles = makeStyles(theme => ({
     buttonGroup: {
@@ -143,6 +144,7 @@ const OverclockingCard: React.FC = () => {
     const handleLevelSelect = (_event: React.MouseEvent<HTMLElement>, level: OverclockLevel | null) => {
         if (level !== null) {
             dispatch(setOverclockLevel(level));
+            flushStore();
 
             if (level !== overclockLevel) {
                 setTimeout(() => {

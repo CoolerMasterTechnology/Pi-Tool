@@ -25,7 +25,7 @@ const store = createStore(
     persistedReducer,
     composeEnhancers(middleware)
 );
-const persistor = persistStore(store);
+export const persistor = persistStore(store);
 
 ReactDOM.render(
     <React.StrictMode>
