@@ -34,7 +34,7 @@ Overclocking may cause system instabilities, most show up immediately with a fai
 | **Base** | Restores stock values |
 | **10%** | <ul><li><code>arm_freq=1650</code></li><li><code>gpu_freq=550</code></li><li><code>over_voltage=2</code></li></ul> |
 | **20%** | <ul><li><code>arm_freq=1800</code></li><li><code>gpu_freq=600</code></li><li><code>over_voltage=4</code></li></ul> |
-| **20%** | <ul><li><code>arm_freq=1950</code></li><li><code>gpu_freq=650</code></li><li><code>over_voltage=5</code></li></ul> |
+| **30%** | <ul><li><code>arm_freq=1950</code></li><li><code>gpu_freq=650</code></li><li><code>over_voltage=5</code></li></ul> |
 
 ## System Monitoring
 
