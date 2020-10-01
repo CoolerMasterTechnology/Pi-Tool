@@ -1,11 +1,11 @@
 #!/bin/sh
-echo "Cooler Master Pi Tool minimal CLI"
-echo ""
+printf "\e[38;5;91mCooler Master Pi Tool minimal CLI"
+printf "\e[37m\e[0m\n"
 sleep 0.5
 
 CONFIGF="/boot/config.txt"
 
-10percent()
+tenpercent()
 {
         echo ""
         echo arm_freq=1650 >> $CONFIGF
@@ -13,9 +13,10 @@ CONFIGF="/boot/config.txt"
         echo over_voltage=2 >> $CONFIGF
         echo ""
         echo "\e[32m Done!\e[0m"
+        echo ""
 }
 
-20percent()
+twentypercent()
 {
         echo ""
         echo arm_freq=1800 >> $CONFIGF
@@ -23,9 +24,10 @@ CONFIGF="/boot/config.txt"
         echo over_voltage=4 >> $CONFIGF
         echo ""
         echo "\e[32m Done!\e[0m"
+        echo ""
 }
 
-30percent()
+thirtypercent()
 {
         echo ""
         echo arm_freq=1950 >> $CONFIGF
@@ -33,6 +35,7 @@ CONFIGF="/boot/config.txt"
         echo over_voltage=5 >> $CONFIGF
         echo ""
         echo "\e[32m Done!\e[0m"
+        echo ""
 }
 
 restorebase()
@@ -41,15 +44,15 @@ restorebase()
 }
 
 while true; do
-        read -p " Do you want to overclock or restore the base values? [1/2/3/4/0]: " 12340
-        printf "\n1.) 10 Percent\n2.) 20 Percent\n3.) 30 Percent\n4.) Restore base values\n0.) Exit\n
-        case $yn in
-                [1]* ) 10percent; break;;
-                [2]* ) 20percent; break;;
-                [3]* ) 30percent; break;;
-                [4]* ) restorebase; break;;
-                [0]* ) break;;
-                * ) echo "Please answer with 1, 2, 3, 4 or 0";;
+        printf "\na.) Overclock 10 Percent\nb.) Overclock 20 Percent\nc.) Overclock 30 Percent\nd.) Restore base values\nz.) Exit\n"
+        read -p "Do you want to overclock or restore the base values? [a/b/c/d/z]: " abcdz
+        case $abcdz in
+                [a]* ) tenpercent; break;;
+                [b]* ) twentypercent; break;;
+                [c]* ) thirtypercent; break;;
+                [d]* ) restorebase; break;;
+                [z]* ) break;;
+                * ) printf "\nPlease answer with a, b, c, d or z\n";;
         esac
 done
 
