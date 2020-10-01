@@ -20,9 +20,9 @@ You can send a command of the following format to the daemon in order to set up 
 {
   "command": "Overclock",
   "params": {
-    "arm_freq": [int],
-    "gpu_freq": [int],
-    "over_voltage": [int]
+    "arm_freq": 1234,
+    "gpu_freq": 1234,
+    "over_voltage": 1234
   }
 }
 ```
@@ -58,7 +58,7 @@ Metrics can be obtained from the daemon by subscribing to a metric identifier (b
 
 ### Metrics
 
-Currently, the following metric identifiers are supported:
+Currently, the following **metric identifiers** are supported:
 
 - `CpuTemp` (_value_ field is current core temperature in deg C multiplied by 10)
 - `CpuFreq` (_value_ field is current core frequency in Hz`)
@@ -94,12 +94,14 @@ Measurement objects are of the following format:
 {
   "event": "Measurement",
   "measurement": {
-    "metric": [metric identifier],
-    "value": [measured value],
-    "timestamp": [timestamp in ms]
+    "metric": "[metric identifier]",
+    "value": 1234,
+    "timestamp": 1234 
   }
 }
 ```
+
+The integer value of the `value` field is outlined above in the currently supported metrics. The `timestamp` is the Unix time in milliseconds during measurement.
 
 ## API: Button remapping
 
@@ -108,13 +110,13 @@ Button mappings can be synced via the daemon via a message of the following form
 ```json
 {
   "command": "SyncMappings",
-  "mappings" [mappings directory]
+  "mappings" {}
 }
 ```
 
 ### Mappings
 
-The mappings have to be sent in an object where each key specifies an unique ID and its corresponding value specifies the mapping. Here is an example for a button mapping directory with a single button mapping that maps the button press sequence _short-long-short-long_ to a reboot action.
+The `mappings` have to be sent in an object where each key specifies an unique ID and its corresponding value specifies the mapping. Here is an example for a button mapping directory with a single button mapping that maps the button press sequence _short-long-short-long_ to a reboot action.
 
 ```json
 {
@@ -135,13 +137,13 @@ The `buttonPresses` are given as either `0` and `1`, _short_ and _long_ button p
 - `2`: Launch script (given in optional field `scriptPath` in `buttonAction` object)
 - `3`: Open in browser (with URL given in optional field `url` in `buttonAction` object)
 
-**Only button mappings with `"active": true` are used by the daemon.`**
+**Only button mappings with `"active": true` are used by the daemon.**
 
 The shutdown and reboot actions are handled by the daemon itself, for other events, it emits a message on the websocket:
 
 ```json
 {
   "event": "ButtonAction",
-  "id": [mapping UID]
+  "id": "[mapping UID]"
 }
 ```
