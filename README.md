@@ -70,6 +70,8 @@ The daemon that collects metrics and listens for button presses is located under
 
 For development, just run the daemon with `cargo run` and spin up a development server for the frontend with `yarn run start`. If you happen to use NixOS, there's also a `shell.nix` file which contains all the development dependencies. To build a package for testing, you can use `yarn run build` and `yarn run dist`.
 
+More information about the `daemon` can be found in the file `daemon/README.md`.
+
 # Pi Case 40
 
 ![Pi Case 40](https://ksr-ugc.imgix.net/assets/029/816/736/669da923362c4a113ce24401f08e11e6_original.png?ixlib=rb-2.1.0&crop=faces&w=1024&h=576&fit=crop&v=1594745435&auto=format&frame=1&q=92&s=b9f5d6055d6a3c2f8c1ea377f06bf08c)
