@@ -139,7 +139,7 @@ The `buttonPresses` are given as either `0` and `1`, _short_ and _long_ button p
 
 **Only button mappings with `"active": true` are used by the daemon.**
 
-The shutdown and reboot actions are handled by the daemon itself, for other events, it emits a message on the websocket:
+The shutdown and reboot actions are handled by the daemon itself, for other events, it emits a message on the websocket when the button sequence is pressed:
 
 ```json
 {
