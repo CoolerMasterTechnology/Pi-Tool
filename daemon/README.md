@@ -110,7 +110,7 @@ Button mappings can be synced via the daemon via a message of the following form
 ```json
 {
   "command": "SyncMappings",
-  "mappings" {}
+  "mappings": {}
 }
 ```
 
@@ -147,3 +147,7 @@ The shutdown and reboot actions are handled by the daemon itself, for other even
   "id": "[mapping UID]"
 }
 ```
+
+## System integration
+
+In the root folder of this repository, there exists a systemd service file that runs the daemon as service, as part of a Pi Tool installation.
