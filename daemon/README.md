@@ -81,7 +81,7 @@ The `daemon` will then continously emit measurement objects, which are documente
 
 ```json
 {
-  "command": "UnubscribeMetric",
+  "command": "UnsubscribeMetric",
   "metric": "[metric identifier]"
 }
 ```
