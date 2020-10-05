@@ -19,6 +19,8 @@ chmod +x pi-tool-install.sh
 
 # Features
 
+![Pi Tool Screenshot](https://i.imgur.com/kKxoK84.png)
+
 ## Overclocking
 
 The overclocking feature included in Pi Tool modifies the following values in `/boot/config.txt`: `over_voltage, arm_freq, gpu_freq`. Users can further modify the overclocking, by editing the values themselves. (`sudo nano /boot/config.txt`)
