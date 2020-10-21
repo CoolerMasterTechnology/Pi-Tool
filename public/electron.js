@@ -3,15 +3,15 @@ const path = require('path');
 const spawn = require('child_process').spawn;
 const exec = require('child_process').exec;
 
-
 let tray = null;
 let mainWindow = null;
+
+const appLock = app.requestSingleInstanceLock();
 
 let trayIconPath = path.join(
     app.getAppPath(),
     "../../public/cm_logo_outline.png"
 );
-
 
 function createWindow () {
     let mainWindow = new BrowserWindow({
@@ -77,9 +77,22 @@ function launchApplication() {
     });
 }
 
-app.on('ready', () => {
-    launchApplication();
-});
+if (!appLock) {
+    app.quit();
+} else {
+    // Maximize already started instance
+    app.on('second-instance', (event, commandLine, workingDirectory) => {
+	if (mainWindow) {
+	    if (mainWindow.isMinimized()) mainWindow.restore()
+	    mainWindow.focus()
+	}
+    })
+    
+    // Launch application
+    app.on('ready', () => {
+	launchApplication();
+    });
+}
 
 /// IPC actions
 

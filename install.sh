@@ -69,6 +69,7 @@ apply_gtk_theme()
 			* ) echo " Please answer yes or no.";;
 		esac
 	done
+        echo " You can select the CM theme by executing 'lxappearance'."
 }
 
 customize_desktop()
