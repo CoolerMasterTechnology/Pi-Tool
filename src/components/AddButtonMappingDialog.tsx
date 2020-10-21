@@ -232,81 +232,91 @@ const ButtonActionList: React.FC<ButtonActionListProps> = ({ selectAction, butto
         );
     }
 
-// Checks if button action is currently selected
-const isSelected = (action: ButtonAction | undefined, identifier: ButtonActionIdentifier) => {
-    if (action !== undefined) {
-        return action.identifier === identifier
-    } else {
-        return false
-    }
-}
-
-const handleActionParamInput = (event: any) => {
-    if (buttonAction !== undefined) {
-        if (isSelected(buttonAction, ButtonActionIdentifier.Script)) {
-            buttonAction.scriptPath = event.target.value;
-        } else if (isSelected(buttonAction, ButtonActionIdentifier.Browser)) {
-            buttonAction.url = event.target.value;
+    // Checks if button action is currently selected
+    const isSelected = (action: ButtonAction | undefined, identifier: ButtonActionIdentifier) => {
+        if (action !== undefined) {
+            return action.identifier === identifier
+        } else {
+            return false
         }
     }
+
+    const handleActionParamInput = (event: any) => {
+        if (buttonAction !== undefined) {
+            if (isSelected(buttonAction, ButtonActionIdentifier.Script)) {
+                buttonAction.scriptPath = event.target.value;
+            } else if (isSelected(buttonAction, ButtonActionIdentifier.Browser)) {
+                buttonAction.url = event.target.value;
+            }
+        }
+    };
+
+    return (
+        <List component="nav">
+            <ListItem
+                button
+                selected={isSelected(buttonAction, ButtonActionIdentifier.SystemShutdown)}
+                onClick={(_e) => handleActionSelect(ButtonActionIdentifier.SystemShutdown)}>
+                <ListItemIcon>
+                    <PowerSettingsNewIcon />
+                </ListItemIcon>
+                <ListItemText primary="Shut down system" />
+            </ListItem>
+            <ListItem
+                button
+                selected={isSelected(buttonAction, ButtonActionIdentifier.SystemReboot)}
+                onClick={(_e) => handleActionSelect(ButtonActionIdentifier.SystemReboot)}>
+                <ListItemIcon>
+                    <ReplayIcon />
+                </ListItemIcon>
+                <ListItemText primary="Restart system" />
+            </ListItem>
+            <ListItem button
+                selected={isSelected(buttonAction, ButtonActionIdentifier.Script)}
+                onClick={(_e) => handleActionSelect(ButtonActionIdentifier.Script)}>
+                <ListItemIcon>
+                    <PlayCircleOutlineIcon />
+                </ListItemIcon>
+                <ListItemText primary="Run custom script" />
+            </ListItem>
+            <Collapse in={isSelected(buttonAction, ButtonActionIdentifier.Script)} timeout="auto" unmountOnExit>
+                <Box p={2} width={1}>
+                    <TextField
+                        value={(buttonAction !== undefined) ? buttonAction.scriptPath : null}
+                        onChange={handleActionParamInput}
+                        className={classes.textField} id="standard-basic" label="Script path" />
+                </Box>
+            </Collapse>
+            <ListItem button
+                selected={isSelected(buttonAction, ButtonActionIdentifier.Browser)}
+                onClick={(_e) => handleActionSelect(ButtonActionIdentifier.Browser)}>
+                <ListItemIcon>
+                    <OpenInBrowserIcon />
+                </ListItemIcon>
+                <ListItemText primary="Open in browser" />
+            </ListItem>
+            <Collapse in={isSelected(buttonAction, ButtonActionIdentifier.Browser)} timeout="auto" unmountOnExit>
+                <Box p={2} width={1}>
+                    <TextField
+                        value={(buttonAction !== undefined) ? buttonAction.url : null}
+                        onChange={handleActionParamInput}
+                        placeholder="https://google.com"
+                        className={classes.textField} id="standard-basic" label="URL" />
+                </Box>
+            </Collapse>
+        </List>
+    );
 };
 
-return (
-    <List component="nav">
-        <ListItem
-            button
-            selected={isSelected(buttonAction, ButtonActionIdentifier.SystemShutdown)}
-            onClick={(_e) => handleActionSelect(ButtonActionIdentifier.SystemShutdown)}>
-            <ListItemIcon>
-                <PowerSettingsNewIcon />
-            </ListItemIcon>
-            <ListItemText primary="Shut down system" />
-        </ListItem>
-        <ListItem
-            button
-            selected={isSelected(buttonAction, ButtonActionIdentifier.SystemReboot)}
-            onClick={(_e) => handleActionSelect(ButtonActionIdentifier.SystemReboot)}>
-            <ListItemIcon>
-                <ReplayIcon />
-            </ListItemIcon>
-            <ListItemText primary="Restart system" />
-        </ListItem>
-        <ListItem button
-            selected={isSelected(buttonAction, ButtonActionIdentifier.Script)}
-            onClick={(_e) => handleActionSelect(ButtonActionIdentifier.Script)}>
-            <ListItemIcon>
-                <PlayCircleOutlineIcon />
-            </ListItemIcon>
-            <ListItemText primary="Run custom script" />
-        </ListItem>
-        <Collapse in={isSelected(buttonAction, ButtonActionIdentifier.Script)} timeout="auto" unmountOnExit>
-            <Box p={2} width={1}>
-                <TextField
-                    value={(buttonAction !== undefined) ? buttonAction.scriptPath : null}
-                    onChange={handleActionParamInput}
-                    className={classes.textField} id="standard-basic" label="Script path" />
-            </Box>
-        </Collapse>
-        <ListItem button
-            selected={isSelected(buttonAction, ButtonActionIdentifier.Browser)}
-            onClick={(_e) => handleActionSelect(ButtonActionIdentifier.Browser)}>
-            <ListItemIcon>
-                <OpenInBrowserIcon />
-            </ListItemIcon>
-            <ListItemText primary="Open in browser" />
-        </ListItem>
-        <Collapse in={isSelected(buttonAction, ButtonActionIdentifier.Browser)} timeout="auto" unmountOnExit>
-            <Box p={2} width={1}>
-                <TextField
-                    value={(buttonAction !== undefined) ? buttonAction.url : null}
-                    onChange={handleActionParamInput}
-                    placeholder="https://google.com"
-                    className={classes.textField} id="standard-basic" label="URL" />
-            </Box>
-        </Collapse>
-    </List>
-);
-};
+const isValidUrl = (urlstr: string) => {
+    try {
+        new URL(urlstr);
+    } catch (_) {
+        return false;
+    }
+
+    return true;
+}
 
 const AddButtonMappingDialog: React.FC<AddButtonMappingDialogProps> = ({ onClose, open }) => {
     const classes = useStyles();
@@ -319,6 +329,7 @@ const AddButtonMappingDialog: React.FC<AddButtonMappingDialogProps> = ({ onClose
     const [showPressesError, setShowPressesError] = React.useState(false);
     const [showActionError, setShowActionError] = React.useState(false);
     const [showExistingError, setShowExistingError] = React.useState(false);
+    const [showUrlError, setShowUrlError] = React.useState(false);
 
     // Reorders button presses in list
     const reorder = (list: ButtonPressItems, startIndex: number, endIndex: number): ButtonPressItems => {
@@ -385,6 +396,17 @@ const AddButtonMappingDialog: React.FC<AddButtonMappingDialogProps> = ({ onClose
             return;
         }
 
+        // Checks for valid URL
+        if (buttonAction !== undefined) {
+            if (buttonAction.url !== undefined) {
+                if (!isValidUrl(buttonAction.url)) {
+                    setShowUrlError(true);
+                    return;
+                }
+            }
+        }
+
+
         // Builds mapping
         const mapping = {
             buttonPresses: presses,
@@ -402,6 +424,7 @@ const AddButtonMappingDialog: React.FC<AddButtonMappingDialogProps> = ({ onClose
         setShowPressesError(false);
         setShowActionError(false);
         setShowExistingError(false);
+        setShowUrlError(false);
 
         // Closes dialog
         handleClose();
@@ -460,6 +483,7 @@ const AddButtonMappingDialog: React.FC<AddButtonMappingDialogProps> = ({ onClose
                     {showPressesError && <Alert severity="error" variant="outlined">Please add at least one button press!</Alert>}
                     {showActionError && <Alert severity="error" variant="outlined">Please select an action!</Alert>}
                     {showExistingError && <Alert severity="error" variant="outlined">Button mapping already exists!</Alert>}
+                    {showUrlError && <Alert severity="error" variant="outlined">Please specify a valid URL!</Alert>}
                     {(showPressesError || showActionError || showExistingError) && <br />}
 
                     <ButtonActionGrid buttonPresses={buttonPresses} />
