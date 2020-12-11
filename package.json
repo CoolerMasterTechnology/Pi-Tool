@@ -49,7 +49,8 @@
     "postinstall": "electron-builder install-app-deps",
     "preelectron-pack": "yarn build",
     "pack": "electron-builder --dir --armv7l",
-    "dist": "USE_SYSTEM_FPM=\"true\" electron-builder --dir --armv7l --linux deb"
+    "dist-armv7l": "USE_SYSTEM_FPM=\"true\" electron-builder --dir --armv7l --linux deb",
+    "dist-arm64": "USE_SYSTEM_FPM=\"true\" electron-builder --dir --arm64 --linux deb"
   },
   "eslintConfig": {
     "extends": "react-app"
