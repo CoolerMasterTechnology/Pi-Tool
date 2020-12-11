@@ -51,6 +51,10 @@ jobs:
       - run: yarn install
       - run: yarn run build
       - run: yarn run dist-arm64
+      - uses: actions/upload-artifact@v2
+        with:
+          name: pi-tool-deb-aarch64
+          path: dist/*.deb
   build-armv7:
     runs-on: ubuntu-latest
 
@@ -95,5 +99,9 @@ jobs:
       - run: yarn install
       - run: yarn run build
       - run: yarn run dist-armv7l
+      - uses: actions/upload-artifact@v2
+        with:
+          name: pi-tool-deb-armv7
+          path: dist/*.deb
       
       
