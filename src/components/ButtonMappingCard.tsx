@@ -134,18 +134,14 @@ const ButtonMappingCard: React.FC = () => {
     const buttonMappings = useSelector((state: RootState) => state.buttonMaps.mappings);
     const [addMappingOpen, setAddMappingOpen] = React.useState(false);
 
-    const syncMappings = () => {
+    // Sync button mappings on every change
+    useEffect(() => {
         daemon.next({
             command: Command.SyncMappings,
             mappings: buttonMappings
         });
         flushStore();
-    }
-
-    // Sync button mappings on every change
-    useEffect(() => {
-        syncMappings();
-    }, [syncMappings, buttonMappings]);
+    }, [buttonMappings]);
 
     // Sets up button action subscriber
     useEffect(() => {
