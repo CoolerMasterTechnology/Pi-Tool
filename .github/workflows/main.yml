@@ -31,5 +31,6 @@ jobs:
         with:
           use-cross: true
           command: build
-          args: --target aarch64-unknown-linux-gnu --features raspberry --release
+          args: --target aarch64-unknown-linux-gnu --features raspberry --release --manifest-path daemon/Cargo.toml
+      - runs: ls daemon
 
