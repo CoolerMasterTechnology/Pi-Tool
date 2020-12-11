@@ -111,6 +111,7 @@ const formatButtonAction = (action: ButtonAction) => {
         case ButtonActionIdentifier.SystemReboot:
             return "Reboot";
         case ButtonActionIdentifier.Script:
+            // eslint-disable-next-line
             const scriptFileName = action.scriptPath?.replace(/^.*[\\\/]/, '');
             return `Launch ${scriptFileName}`;
         case ButtonActionIdentifier.Browser:
@@ -144,7 +145,7 @@ const ButtonMappingCard: React.FC = () => {
     // Sync button mappings on every change
     useEffect(() => {
         syncMappings();
-    }, [buttonMappings]);
+    }, [syncMappings, buttonMappings]);
 
     // Sets up button action subscriber
     useEffect(() => {
