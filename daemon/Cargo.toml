@@ -20,6 +20,7 @@ crossbeam = "0.7.3"
 lazy_static = "1.4.0"
 sysfs_gpio = "0.5.4"
 sysinfo = "0.15.1"
+openssl = { version = "0.10", features = ["vendored"] }
 
 [features]
 raspberry = []
