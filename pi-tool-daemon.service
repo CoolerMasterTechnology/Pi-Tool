@@ -4,7 +4,7 @@ Description=Cooler Master Pi Tool Daemon
 [Service]
 User=root
 Group=root
-ExecStart='/opt/Cooler Master Pi Tool/bin/pi-tool-daemon'
+ExecStart='/opt/Cooler Master Pi Tool/bin/daemon'
 
 [Install]
 WantedBy=multi-user.target

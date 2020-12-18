@@ -88,7 +88,7 @@
         "from": "daemon/target/release",
         "to": "bin",
         "filter": [
-          "pi-tool-daemon"
+          "daemon"
         ]
       }
     ],
@@ -96,8 +96,8 @@
       "icon": "public/cm_logo_outline.png"
     },
     "deb": {
+      "icon": "public/cm_logo_outline.png",
       "fpm": [
-        "--architecture=armhf",
         "--deb-systemd=pi-tool-daemon.service"
       ],
       "depends": [
