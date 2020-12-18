@@ -47,8 +47,7 @@ jobs:
           command: build
           args: --target aarch64-unknown-linux-gnu --features raspberry --release
           working-directory: daemon
-      - run: cp -r daemon/target/aarch64-unknown-linux-gnu/release daemon/target/release
-      - uses: mxschmitt/action-tmate@v3
+      - run: cp -r daemon/target/aarch64-unknown-linux-gnu/release daemon/target
       - run: yarn install
       - run: yarn run build
       - run: yarn run dist-arm64
@@ -96,7 +95,7 @@ jobs:
           command: build
           args: --target armv7-unknown-linux-gnueabihf --features raspberry --release
           working-directory: daemon
-      - run: cp -r daemon/target/armv7-unknown-linux-gnueabihf/release daemon/target/release
+      - run: cp -r daemon/target/armv7-unknown-linux-gnueabihf/release daemon/target
       - run: yarn install
       - run: yarn run build
       - run: yarn run dist-armv7l
