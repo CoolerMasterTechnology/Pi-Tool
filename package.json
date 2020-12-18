@@ -108,7 +108,8 @@
         "libxtst6",
         "libnss3",
         "lxterminal",
-        "libraspberrypi-bin"
+        "libraspberrypi-bin",
+	"libxss-dev"
       ]
     }
   }
