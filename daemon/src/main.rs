@@ -1,9 +1,9 @@
 // mod mapping;
-mod metrics;
 mod actions;
-mod overclock;
-mod mapping;
 mod command_handler;
+mod mapping;
+mod metrics;
+mod overclock;
 mod util;
 use crate::command_handler::*;
 
@@ -14,25 +14,25 @@ use std::{
     sync::{Arc, Mutex},
 };
 
-use futures_util::{
-    future, pin_mut,
-    stream::TryStreamExt,
-    StreamExt,
-};
-use futures::channel::mpsc::{unbounded, UnboundedSender};
 use crossbeam::crossbeam_channel;
+use futures::channel::mpsc::{unbounded, UnboundedSender};
+use futures_util::{future, pin_mut, stream::TryStreamExt, StreamExt};
 
-use tokio::net::{TcpListener, TcpStream};
-use tungstenite::protocol::Message;
 use log::*;
 use simplelog::*;
+use tokio::net::{TcpListener, TcpStream};
+use tungstenite::protocol::Message;
 
 // Declares types
 type Tx = UnboundedSender<Message>;
 type PeerMap = Arc<Mutex<HashMap<SocketAddr, Tx>>>;
 
-async fn handle_connection(peer_map: PeerMap, raw_stream: TcpStream,
-			   addr: SocketAddr, ws_in_tx: crossbeam_channel::Sender<Command>) {
+async fn handle_connection(
+    peer_map: PeerMap,
+    raw_stream: TcpStream,
+    addr: SocketAddr,
+    ws_in_tx: crossbeam_channel::Sender<Command>,
+) {
     println!("Incoming TCP connection from: {}", addr);
 
     let ws_stream = tokio_tungstenite::accept_async(raw_stream)
@@ -47,16 +47,16 @@ async fn handle_connection(peer_map: PeerMap, raw_stream: TcpStream,
     let (outgoing, incoming) = ws_stream.split();
 
     let broadcast_incoming = incoming.try_for_each(|msg| {
-	if msg.is_text() {
-	    // Parses command 
-	    let msg_str = msg.to_text().unwrap();
-	    let cmd: Command = serde_json::from_str(msg_str).unwrap();
+        if msg.is_text() {
+            // Parses command
+            let msg_str = msg.to_text().unwrap();
+            let cmd: Command = serde_json::from_str(msg_str).unwrap();
 
-	    // Sends command to handler
-	    if let Err(_e) = ws_in_tx.send(cmd) {
-	    	warn!("Failed to send command to handler");
-	    }
-	}
+            // Sends command to handler
+            if let Err(_e) = ws_in_tx.send(cmd) {
+                warn!("Failed to send command to handler");
+            }
+        }
 
         future::ok(())
     });
@@ -72,11 +72,11 @@ async fn handle_connection(peer_map: PeerMap, raw_stream: TcpStream,
 
 #[tokio::main]
 async fn main() -> Result<(), IoError> {
-    CombinedLogger::init(
-	vec![
-	    SimpleLogger::new(LevelFilter::Debug, Config::default())
-	]
-    ).unwrap();
+    CombinedLogger::init(vec![SimpleLogger::new(
+        LevelFilter::Debug,
+        Config::default(),
+    )])
+    .unwrap();
 
     info!("Starting Cooler Master Pi Tool Daemon...");
 
@@ -96,9 +96,13 @@ async fn main() -> Result<(), IoError> {
 
     // Spawns handler for each connection
     while let Ok((stream, addr)) = listener.accept().await {
-        tokio::spawn(handle_connection(state.clone(), stream, addr, ws_in_tx.clone()));
+        tokio::spawn(handle_connection(
+            state.clone(),
+            stream,
+            addr,
+            ws_in_tx.clone(),
+        ));
     }
 
     Ok(())
 }
-

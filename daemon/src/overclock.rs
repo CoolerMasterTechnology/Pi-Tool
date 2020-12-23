@@ -1,6 +1,6 @@
-use serde_derive::{Serialize, Deserialize};
-use std::collections::HashSet;
 use regex::Regex;
+use serde_derive::{Deserialize, Serialize};
+use std::collections::HashSet;
 use std::{
     fs::OpenOptions,
     io::{prelude::*, BufReader, LineWriter, SeekFrom},
@@ -11,19 +11,19 @@ use std::{
 pub struct OverclockParameters {
     arm_freq: u32,
     gpu_freq: u32,
-    over_voltage: u32
+    over_voltage: u32,
 }
 
 impl OverclockParameters {
     fn get_line(&self, key: &str) -> String {
-	let value = match key {
-	    "arm_freq" => self.arm_freq,
-	    "gpu_freq" => self.gpu_freq,
-	    "over_voltage" => self.over_voltage,
-	    _ => 0
-	};
+        let value = match key {
+            "arm_freq" => self.arm_freq,
+            "gpu_freq" => self.gpu_freq,
+            "over_voltage" => self.over_voltage,
+            _ => 0,
+        };
 
-	format!("{}={}", key, value)
+        format!("{}={}", key, value)
     }
 }
 
@@ -31,11 +31,11 @@ impl OverclockParameters {
 fn check_previous_run(lines: &Vec<String>) -> bool {
     let mut check_flag = false;
     let re = Regex::new(r"^(# Pi Tool)").unwrap();
-    
+
     for l in lines {
-	if re.is_match(&l) {
-	    check_flag = true;
-	}
+        if re.is_match(&l) {
+            check_flag = true;
+        }
     }
 
     check_flag
@@ -50,13 +50,14 @@ fn format_user_value(line: &str) -> String {
 pub fn overclock(params: OverclockParameters) {
     // Reads config file
     let mut config_file = OpenOptions::new()
-	.read(true)
-	.write(true)
-	.open("/boot/config.txt").unwrap();
+        .read(true)
+        .write(true)
+        .open("/boot/config.txt")
+        .unwrap();
     let config_reader = BufReader::new(&config_file);
     let config_lines = config_reader
-	.lines()
-	.map(|l| l.expect("Failed to read line"))
+        .lines()
+        .map(|l| l.expect("Failed to read line"))
         .collect();
 
     // Initializes hash set for already updated values
@@ -68,41 +69,41 @@ pub fn overclock(params: OverclockParameters) {
     // Defines regex and checks for previous runs
     let re = Regex::new(r"^(arm_freq|gpu_freq|over_voltage)").unwrap();
     let previous_run = check_previous_run(&config_lines);
-    let mut new_config = vec![]; 
+    let mut new_config = vec![];
 
     // First run
     if !previous_run {
-	new_config.push("# Pi Tool adjusted the overclocking values in this file".to_string());
+        new_config.push("# Pi Tool adjusted the overclocking values in this file".to_string());
     }
 
     // Updates existing fields
     for line in config_lines {
-	match re.captures(&line) {
-	    Some(cap) => {
-		let entry_key = cap.get(1).map_or("", |m| m.as_str());
+        match re.captures(&line) {
+            Some(cap) => {
+                let entry_key = cap.get(1).map_or("", |m| m.as_str());
 
-		if previous_run {
-		    let config_entry = params.get_line(entry_key);
-		    new_config.push(config_entry);
-		    updated.remove(entry_key);
-		} else {
-		    let user_config_entry = format_user_value(&line);
-		    let config_entry = params.get_line(entry_key);
-		    new_config.push(user_config_entry);
-		    new_config.push(config_entry);
-		    updated.remove(entry_key);
-		}
-	    },
-	    None => {
-		new_config.push(line);
-	    }
-	}
+                if previous_run {
+                    let config_entry = params.get_line(entry_key);
+                    new_config.push(config_entry);
+                    updated.remove(entry_key);
+                } else {
+                    let user_config_entry = format_user_value(&line);
+                    let config_entry = params.get_line(entry_key);
+                    new_config.push(user_config_entry);
+                    new_config.push(config_entry);
+                    updated.remove(entry_key);
+                }
+            }
+            None => {
+                new_config.push(line);
+            }
+        }
     }
 
     // Insert previously non-existent fields
     for entry_key in updated.iter() {
-	let config_entry = params.get_line(entry_key);
-	new_config.push(config_entry);
+        let config_entry = params.get_line(entry_key);
+        new_config.push(config_entry);
     }
 
     // Clears config and writes updated one
@@ -110,7 +111,7 @@ pub fn overclock(params: OverclockParameters) {
     config_file.set_len(0).unwrap();
     let mut writer = LineWriter::new(config_file);
     for line in new_config {
-	writer.write_all(line.as_bytes()).unwrap();
-	writer.write_all(b"\n").unwrap();
+        writer.write_all(line.as_bytes()).unwrap();
+        writer.write_all(b"\n").unwrap();
     }
 }

@@ -1,6 +1,6 @@
 {
   "name": "pi-tool",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "author": "Cooler Master <costa_m@coolermaster.eu>",
   "description": "Overclocking, monitoring, button remapping tool for the Pi 4",
   "private": true,
@@ -42,14 +42,15 @@
   "scripts": {
     "build-daemon": "cd daemon && cargo build --release --features raspberry",
     "start": "react-scripts start",
-    "build": "yarn run build-daemon && react-scripts build",
+    "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "electron": "electron .",
     "postinstall": "electron-builder install-app-deps",
     "preelectron-pack": "yarn build",
     "pack": "electron-builder --dir --armv7l",
-    "dist": "USE_SYSTEM_FPM=\"true\" electron-builder --dir --armv7l --linux deb"
+    "dist-armv7l": "USE_SYSTEM_FPM=\"true\" electron-builder --dir --armv7l --linux deb",
+    "dist-arm64": "USE_SYSTEM_FPM=\"true\" electron-builder --dir --arm64 --linux deb"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -95,8 +96,8 @@
       "icon": "public/cm_logo_outline.png"
     },
     "deb": {
+      "icon": "public/cm_logo_outline.png",
       "fpm": [
-        "--architecture=armhf",
         "--deb-systemd=pi-tool-daemon.service"
       ],
       "depends": [
@@ -107,7 +108,8 @@
         "libxtst6",
         "libnss3",
         "lxterminal",
-        "libraspberrypi-bin"
+        "libraspberrypi-bin",
+	"libxss-dev"
       ]
     }
   }

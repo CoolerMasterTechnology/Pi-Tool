@@ -80,7 +80,7 @@ customize_desktop()
 	echo " Installing theme installation dependencies..."
 	sudo apt install git
 	echo " Changing wallpaper..."
-	cp /tmp/theme/cm_wallpaper.jpg ~/.cm_wallpaper.jpg
+	cp /tmp/cm_wallpaper.jpg ~/.cm_wallpaper.jpg
 	pcmanfm --set-wallpaper ~/.cm_wallpaper.jpg
 	echo " Changing GTK theme..."
 	apply_gtk_theme
@@ -90,10 +90,9 @@ customize_desktop()
 
 # Download everything
 echo " Downloading data..."
-curl -L https://github.com/CoolerMasterTechnology/pi-tool/releases/latest/download/pi-tool.tar.gz -o /tmp/pi-tool.tar.gz
 cd /tmp
-tar -xf pi-tool.tar.gz
-
+curl -L https://github.com/CoolerMasterTechnology/Pi-Tool/releases/latest/download/pi-tool-$(dpkg --print-architecture).deb -o pi-tool.deb
+curl -L https://github.com/CoolerMasterTechnology/Pi-Tool/raw/master/theme/cm_wallpaper.jpg -o cm_wallpaper.jpg
 echo ""
 echo " Download finished!"
 
@@ -113,7 +112,6 @@ echo "\e[34m === Pi Tool installation ===\e[0m"
 echo " Installing..."
 
 deb_file_path="/tmp/pi-tool*.deb"
-sudo apt-get install libxss-dev
 sudo apt-get install $deb_file_path
 
 echo " "

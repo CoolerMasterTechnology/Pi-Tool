@@ -96,7 +96,7 @@ const MetricChart: React.FC<MetricChartProps> = ({ metric }) => {
             metricSubscriber.unsubscribe();
         };
 
-    }, []);
+    }, [metric]);
 
 
 

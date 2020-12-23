@@ -1,14 +1,14 @@
+use crate::actions;
+use crate::command_handler::Event;
 use log::*;
-use serde_derive::{Serialize, Deserialize};
-use std::thread;
-use std::time::{SystemTime, UNIX_EPOCH};
-use std::thread::sleep;
-use std::time::Duration;
-use sysfs_gpio::{Direction, Pin};
+use serde_derive::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
-use crate::command_handler::Event;
-use crate::actions;
+use std::thread;
+use std::thread::sleep;
+use std::time::Duration;
+use std::time::{SystemTime, UNIX_EPOCH};
+use sysfs_gpio::{Direction, Pin};
 
 const BUTTON_PIN_NUM: u64 = 3;
 const LONG_PRESS_DURATION: u128 = 300;
@@ -24,20 +24,19 @@ pub enum ButtonAction {
     OpenBrowser { url: String },
 }
 
-
 #[derive(Clone, Debug, Hash, Eq, PartialEq, Deserialize, Serialize)]
 pub enum ButtonPress {
     Short,
-    Long
+    Long,
 }
 
 impl ButtonPress {
     pub fn from_num(num: u8) -> Self {
-	if num >= 1 {
-	    ButtonPress::Long
-	} else {
-	    ButtonPress::Short
-	}
+        if num >= 1 {
+            ButtonPress::Long
+        } else {
+            ButtonPress::Short
+        }
     }
 }
 
@@ -61,83 +60,82 @@ pub struct ButtonListener {
 
 impl ButtonListener {
     /// Creates a new `ButtonListener`
-    pub fn new() -> Self{
-	ButtonListener {
-	    mappings: Arc::new(Mutex::new(HashMap::new()))
-	}
+    pub fn new() -> Self {
+        ButtonListener {
+            mappings: Arc::new(Mutex::new(HashMap::new())),
+        }
     }
 
     /// Starts the button listener
     pub fn start(&mut self, peer_map: crate::PeerMap) {
-	let mappings_local = self.mappings.clone();
-	
-	thread::spawn(move || {
-	    if cfg!(feature="raspberry") {
-		let _res = poll(mappings_local, peer_map);
-	    }
-	});
+        let mappings_local = self.mappings.clone();
+
+        thread::spawn(move || {
+            if cfg!(feature = "raspberry") {
+                let _res = poll(mappings_local, peer_map);
+            }
+        });
     }
 
     /// Syncs button mappings
     pub fn sync(&mut self, mappings: Vec<Mapping>) {
         debug!("Syncing button mappings");
-	let mut mappings_dir = self.mappings.lock().unwrap();
+        let mut mappings_dir = self.mappings.lock().unwrap();
 
-	// Clears mapping directory
-	mappings_dir.clear();
+        // Clears mapping directory
+        mappings_dir.clear();
 
-	// Inserts new mappings into mapping directory
-	for map in mappings {
-	    if map.active {
-		mappings_dir.insert(
-		    map.button_presses.clone(),
-		    map
-		);
-	    }
-	}
+        // Inserts new mappings into mapping directory
+        for map in mappings {
+            if map.active {
+                mappings_dir.insert(map.button_presses.clone(), map);
+            }
+        }
     }
 }
 
 /// Looks up button sequence and triggers corresponding action
-fn trigger_action(mappings: &MappingDirectory,
-		  press_vec: &Vec<ButtonPress>,
-		  peers: &crate::PeerMap) {
+fn trigger_action(
+    mappings: &MappingDirectory,
+    press_vec: &Vec<ButtonPress>,
+    peers: &crate::PeerMap,
+) {
     let mapping_dir = mappings.lock().unwrap();
     match mapping_dir.get(press_vec) {
-	Some(mapping) => {
-	    debug!("Triggering action");
+        Some(mapping) => {
+            debug!("Triggering action");
 
-	    match &mapping.button_action {
-		ButtonAction::Shutdown => {
-		    actions::shutdown().unwrap()
-		},
-		ButtonAction::Reboot => {
-		    actions::reboot().unwrap()
-		},
-		ButtonAction::LaunchScript { path: _ } => {
-		    let event = Event::ButtonAction { id: mapping.id.clone() };
-		    crate::command_handler::broadcast(peers, event);
-		},
-		ButtonAction::OpenBrowser { url: _ } => {
-		    let event = Event::ButtonAction { id: mapping.id.clone() };
-		    crate::command_handler::broadcast(peers, event);
-		}
-	    }
-	},
-	None => {
-	    warn!("Could not find corresponding button action");
-	}
+            match &mapping.button_action {
+                ButtonAction::Shutdown => actions::shutdown().unwrap(),
+                ButtonAction::Reboot => actions::reboot().unwrap(),
+                ButtonAction::LaunchScript { path: _ } => {
+                    let event = Event::ButtonAction {
+                        id: mapping.id.clone(),
+                    };
+                    crate::command_handler::broadcast(peers, event);
+                }
+                ButtonAction::OpenBrowser { url: _ } => {
+                    let event = Event::ButtonAction {
+                        id: mapping.id.clone(),
+                    };
+                    crate::command_handler::broadcast(peers, event);
+                }
+            }
+        }
+        None => {
+            warn!("Could not find corresponding button action");
+        }
     }
 }
 
 /// Gets a timestamp in milliseconds
 fn get_timestamp() -> u128 {
-   let start = SystemTime::now();
-   let since_epoch = start
-       .duration_since(UNIX_EPOCH)
-       .expect("Time went backwards");
+    let start = SystemTime::now();
+    let since_epoch = start
+        .duration_since(UNIX_EPOCH)
+        .expect("Time went backwards");
 
-   since_epoch.as_millis()
+    since_epoch.as_millis()
 }
 
 /// Appends button press to recorded sequence
@@ -176,20 +174,20 @@ fn poll(mappings: MappingDirectory, peer_map: crate::PeerMap) -> sysfs_gpio::Res
 
             // Changes button state based on debouncing
             if (get_timestamp() - last_debounce) > DEBOUNCE_DELAY {
-                 button_state = val == 0;
+                button_state = val == 0;
             }
 
             // Checks for press/release of button
             match (prev_button_state, button_state) {
                 (false, true) => {
                     pressed_time = get_timestamp();
-                },
+                }
                 (true, false) => {
                     released_time = get_timestamp();
                     press_duration = released_time - pressed_time;
                     last_press_time = released_time;
                     push_button_press(&mut button_press_vec, press_duration);
-                },
+                }
                 _ => {}
             }
 
