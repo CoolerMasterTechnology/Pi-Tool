@@ -194,7 +194,7 @@ fn poll(mappings: MappingDirectory, peer_map: crate::PeerMap) -> sysfs_gpio::Res
             }
 
             // Resets button press sequence timer
-            if (get_timestamp() - last_press_time) > SEQUENCE_DELAY &&
+            if !button_state && (get_timestamp() - last_press_time) > SEQUENCE_DELAY &&
 		!button_press_vec.is_empty() {
                 trigger_action(&mappings, &button_press_vec, &peer_map);
                 button_press_vec.clear();
