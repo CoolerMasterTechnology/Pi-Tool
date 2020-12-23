@@ -4,7 +4,7 @@ on:
   push:
     branches: [ master, develop ]
   pull_request:
-    branches: [ master ]
+    branches: [ master, develop ]
 
 jobs:
   build-aarch64:
@@ -53,7 +53,7 @@ jobs:
       - run: yarn run dist-arm64
       - uses: actions/upload-artifact@v2
         with:
-          name: pi-tool-deb-aarch64
+          name: pi-tool-arm64
           path: dist/*.deb
   build-armv7:
     runs-on: ubuntu-latest
@@ -101,7 +101,7 @@ jobs:
       - run: yarn run dist-armv7l
       - uses: actions/upload-artifact@v2
         with:
-          name: pi-tool-deb-armv7
+          name: pi-tool-armhf
           path: dist/*.deb
       
       
